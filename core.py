@@ -199,6 +199,12 @@ div[class*="st-key-card-"] {
 .lect img { width: 110px; height: 128px; border-radius: 18px; object-fit: cover; border: 2px solid %MINT_TINT%; }
 .footer { color: %SLATE%; font-size: 0.8rem; text-align: center; margin: 32px 0 8px 0; }
 
+/* Sticky footer lintas perangkat: halaman pendek mengisi viewport, halaman panjang tetap natural. */
+.block-container > div[data-testid="stVerticalBlock"] {
+    min-height: calc(100vh - 7rem);
+}
+div[class*="st-key-sitefoot"] { margin-top: auto !important; }
+
 .block-container { padding-top: 5.6rem !important; }
 [data-testid="stHeader"] { background: transparent !important; backdrop-filter: none !important; border-bottom: 0 !important; }
 
@@ -228,11 +234,64 @@ div[class*="st-key-navcta"] a:hover { background: #047857 !important; box-shadow
 div[class*="st-key-navcta"] a p, div[class*="st-key-navcta"] a span { color: #fff !important; }
 .navlogo { height: 34px; display: block; }
 @media (max-width: 760px) {
-    div[class*="st-key-topnav"] { padding: 6px 8px; }
-    div[class*="st-key-navcta"], .navlogo { display: none; }
-    div[class*="st-key-topnav"] a { padding: 7px 10px !important; }
-    div[class*="st-key-topnav"] a p { font-size: 0.8rem; }
-    div[class*="st-key-topnav"] a span[data-testid="stIconMaterial"] { display: none; }
+    /* Navbar mobile: tiga menu memakai grid agar setiap tautan mendapat lebar nyata. */
+    .block-container { padding-top: 5.0rem !important; padding-bottom: 0 !important; }
+    div[class*="st-key-topnav"] {
+        top: 8px; left: 50%; transform: translateX(-50%);
+        width: calc(100vw - 20px); max-width: 520px;
+        padding: 6px 7px; border-radius: 22px;
+    }
+    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 4px !important; width: 100% !important;
+    }
+    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
+        display: block !important; width: auto !important;
+        min-width: 0 !important; flex: initial !important; padding: 0 !important;
+    }
+    /* Sembunyikan logo dan CTA; sisakan Beranda, Deteksi Penyakit, Tim Kami. */
+    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]:first-child,
+    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]:last-child {
+        display: none !important;
+    }
+    div[class*="st-key-topnav"] [data-testid="stColumn"] > div { width: 100% !important; }
+    div[class*="st-key-topnav"] a {
+        display: flex !important; width: 100% !important; min-width: 0 !important;
+        min-height: 44px; padding: 7px 3px !important; margin: 0 !important;
+        justify-content: center !important; text-align: center;
+    }
+    div[class*="st-key-topnav"] a p,
+    div[class*="st-key-topnav"] a span {
+        font-size: clamp(0.68rem, 2.8vw, 0.82rem) !important;
+        line-height: 1.15 !important; white-space: normal !important;
+        overflow-wrap: normal !important; word-break: normal !important;
+        text-align: center; margin: 0 !important;
+    }
+    div[class*="st-key-topnav"] a span[data-testid="stIconMaterial"] { display: none !important; }
+
+    /* Footer tetap di bawah pada halaman pendek, tetapi mengikuti konten pada halaman panjang. */
+    .block-container > div[data-testid="stVerticalBlock"] {
+        min-height: calc(100vh - 5rem);
+    }
+    div[class*="st-key-sitefoot"] {
+        margin-top: auto !important; margin-bottom: 0 !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding: 24px 22px 14px !important;
+    }
+    div[class*="st-key-sitefoot"] [data-testid="stHorizontalBlock"] {
+        gap: 1.1rem !important;
+    }
+    div[class*="st-key-sitefoot"] [data-testid="stColumn"] {
+        min-width: 0 !important;
+    }
+    div[class*="st-key-sitefoot"] .fdesc { max-width: none; }
+    div[class*="st-key-sitefoot"] .fbar { line-height: 1.5; }
+}
+@media (max-width: 360px) {
+    div[class*="st-key-topnav"] { width: calc(100vw - 12px); padding: 5px; }
+    div[class*="st-key-topnav"] a { padding: 7px 2px !important; }
+    div[class*="st-key-topnav"] a p { font-size: 0.66rem !important; }
 }
 
 .dcard { display: flex; flex-direction: column; gap: 0; }

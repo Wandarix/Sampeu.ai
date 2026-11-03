@@ -8,7 +8,7 @@ TEAM = [
     {"nama": "Daffa' Raihandi", "peran": "Integrasi Aplikasi", "model": "Model EfficientNetB0", "foto": "daffa.jpg"},
     {"nama": "Muhamad Arif Darmawan", "peran": "Pengelola Protokol", "model": "Model ResNet50", "foto": "arif.jpg"},
 ]
-DOSEN = {"nama": "Dodik Ariyanto, S.T.P., M.Sc.", "peran": "Dosen Pengampu", "foto": "dodik.jpg"}
+DOSEN = {"nama": "Dodik Ariyanto, S.T.P., M.Si.", "peran": "Dosen Pengampu", "foto": "dodik.jpg"}
 GITHUB = "https://github.com/Wandarix/Sampeu.ai"
 # -------------------------------------------------------------------------------------------
 
