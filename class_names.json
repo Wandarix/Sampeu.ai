@@ -1,0 +1,8 @@
+{
+  "labels": ["CBB", "CBSD", "CGM", "CMD", "Healthy"],
+  "label_index": {"CBB": 0, "CBSD": 1, "CGM": 2, "CMD": 3, "Healthy": 4},
+  "image_size": [224, 224],
+  "channels": 3,
+  "preprocessing": "tensorflow.keras.applications.efficientnet.preprocess_input",
+  "note": "Preprocessing aplikasi harus sama dengan training EfficientNetB0: resize 224x224, RGB, lalu efficientnet.preprocess_input. Tanpa augmentasi."
+}
