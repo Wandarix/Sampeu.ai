@@ -1,3 +1,4 @@
+import hashlib
 import time
 
 import numpy as np
@@ -7,7 +8,7 @@ from PIL import Image
 from core import (
     BATASAN, CARE_NOTE, CLASS_CARE, CLASS_INFO, CLASS_NAMES, CLASS_SYMPTOMS, CONF_THRESHOLD, EMERALD,
     MARGIN_THRESHOLD, MINT, STATUS, bar, build_report, footer, gradcam, html, load_model, overlay, pct, penyakit_img,
-    prepare,
+    prepare, sibi_loading,
 )
 
 html(
@@ -55,11 +56,28 @@ with right:
             """
         )
     else:
-        model = load_model()
-        x = prepare(img)
-        t0 = time.perf_counter()
-        probs = model.predict(x, verbose=0)[0]
-        ms = (time.perf_counter() - t0) * 1000
+        # Analisis hanya dijalankan untuk foto baru (hasil disimpan), supaya Sibi tidak muncul tiap kali
+        # pengguna mengganti tampilan Grad-CAM. Selama analisis, Sibi tampil sebagai penanda menunggu.
+        key = hashlib.md5(file.getvalue()).hexdigest()
+        saved = st.session_state.get("analisis")
+        if saved is None or saved["key"] != key:
+            loading = st.empty()
+            loading.markdown(sibi_loading(), unsafe_allow_html=True)
+            model = load_model()
+            x = prepare(img)
+            t0 = time.perf_counter()
+            probs = model.predict(x, verbose=0)[0]
+            ms = (time.perf_counter() - t0) * 1000
+            top_i = int(np.argmax(probs))
+            try:
+                ov = overlay(img, gradcam(model, x, top_i))
+                cam_err = None
+            except Exception as e:  # Grad-CAM gagal tidak boleh menggagalkan hasil utama
+                ov, cam_err = None, e
+            saved = {"key": key, "probs": probs, "ms": ms, "ov": ov, "cam_err": cam_err}
+            st.session_state["analisis"] = saved
+            loading.empty()
+        probs, ms, ov, cam_err = saved["probs"], saved["ms"], saved["ov"], saved["cam_err"]
 
         order = np.argsort(probs)[::-1]
         top, second = int(order[0]), int(order[1])
@@ -90,13 +108,6 @@ with right:
             <div class="ring-in"><b>{pct(conf)}</b><span>KEYAKINAN</span></div></div></div>
             """
         )
-
-        try:
-            cam = gradcam(model, x, top)
-            ov = overlay(img, cam)
-            cam_err = None
-        except Exception as e:  # Grad-CAM gagal tidak boleh menggagalkan hasil utama
-            ov, cam_err = None, e
 
         with st.container(border=True, key="card-cam"):
             st.markdown("#### Visualisasi Grad-CAM")

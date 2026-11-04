@@ -302,6 +302,24 @@ div[class*="st-key-navcta"] a p, div[class*="st-key-navcta"] a span { color: #ff
     div[class*="st-key-sitefoot"] .fbar { line-height: 1.5; }
 }
 
+/* Maskot Sibi saat menunggu hasil deteksi */
+.sibi { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 26px 20px 22px;
+    background: linear-gradient(135deg, %MINT_TINT% 0%, %ICE% 100%); min-height: 260px; justify-content: center; }
+.sibi img { width: 150px; height: auto; display: block; transform-origin: 50% 90%; animation: sibi-float 1.9s ease-in-out infinite; }
+.sibi .bubble { position: relative; background: #fff; border: 1px solid #BBF7D0; border-radius: 18px; padding: 10px 18px;
+    font-weight: 600; color: %NAVY%; font-size: 0.98rem; line-height: 1.4; max-width: 340px;
+    box-shadow: 0 6px 18px -6px rgba(0,23,61,0.12); }
+.sibi .bubble::before { content: ""; position: absolute; top: -7px; left: 50%; width: 12px; height: 12px; background: #fff;
+    border-left: 1px solid #BBF7D0; border-top: 1px solid #BBF7D0; transform: translateX(-50%) rotate(45deg); }
+.sibi p { margin: 0; color: %SLATE%; font-size: 0.86rem; }
+.sibi .dots { display: inline-flex; gap: 3px; margin-left: 5px; vertical-align: baseline; }
+.sibi .dots i { width: 5px; height: 5px; border-radius: 50%; background: %EMERALD%; display: inline-block; animation: sibi-dot 1.2s ease-in-out infinite; }
+.sibi .dots i:nth-child(2) { animation-delay: .18s; }
+.sibi .dots i:nth-child(3) { animation-delay: .36s; }
+@keyframes sibi-float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
+@keyframes sibi-dot { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-3px); } }
+@media (prefers-reduced-motion: reduce) { .sibi img, .sibi .dots i { animation: none; } }
+
 .dcard { display: flex; flex-direction: column; gap: 0; }
 .dcard .dtop { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
 .tagc { font-size: 0.72rem; font-weight: 700; border-radius: 999px; padding: 3px 10px; background: %ICE%; color: %COBALT%; }
@@ -371,9 +389,27 @@ def inject_css():
     st.markdown(CSS, unsafe_allow_html=True)
 
 
+def html_str(s):
+    """Rapikan HTML (tanpa indentasi/baris kosong) agar tidak dibaca sebagai blok kode markdown."""
+    return "\n".join(l.strip() for l in s.strip().splitlines() if l.strip())
+
+
 def html(s):
-    """Render HTML tanpa indentasi/baris kosong (agar tidak dibaca sebagai blok kode markdown)."""
-    st.markdown("\n".join(l.strip() for l in s.strip().splitlines() if l.strip()), unsafe_allow_html=True)
+    """Render HTML tanpa indentasi/baris kosong."""
+    st.markdown(html_str(s), unsafe_allow_html=True)
+
+
+def sibi_loading():
+    """Kartu maskot Sibi untuk tampilan menunggu hasil deteksi (ditaruh di st.empty())."""
+    return html_str(
+        f'''
+        <div class="card2 sibi" role="status" aria-live="polite">
+        <img src="{img_uri(ASSETS / "sibi.png", "image/png")}" alt="Sibi, maskot sampeu.ai">
+        <div class="bubble">Sebentar ya, lagi dicek dulu sama Sibi<span class="dots"><i></i><i></i><i></i></span></div>
+        <p>Sibi lagi memeriksa daun dan menyiapkan peta Grad-CAM.</p>
+        </div>
+        '''
+    )
 
 
 @st.cache_data
@@ -418,7 +454,7 @@ def render_nav(active):
 
 
 # ----------------------- Model & prediksi (TensorFlow dimuat malas) -----------------------
-@st.cache_resource(show_spinner="Memuat model...")
+@st.cache_resource(show_spinner=False)
 def load_model():
     import tensorflow as tf
 
