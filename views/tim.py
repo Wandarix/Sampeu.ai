@@ -2,11 +2,23 @@ import streamlit as st
 
 from core import ASSETS, footer, html, img_uri
 
-# ----- Ubah di sini bila ada perubahan nama, peran, atau foto (berkas di assets/team/) -----
+# ----- Ubah di sini bila ada perubahan nama, peran, jobdesk, atau foto (berkas di assets/team/) -----
 TEAM = [
-    {"nama": "Muhammad Adam Ilyasa", "peran": "Ketua Kelompok", "model": "Model MobileNetV2", "foto": "adam.jpg"},
-    {"nama": "Daffa' Raihandi", "peran": "Integrasi Aplikasi", "model": "Model EfficientNetB0", "foto": "daffa.jpg"},
-    {"nama": "Muhamad Arif Darmawan", "peran": "Pengelola Protokol", "model": "Model ResNet50", "foto": "arif.jpg"},
+    {
+        "nama": "Muhammad Adam Ilyasa", "nim": "J0404241048", "peran": "Ketua Kelompok", "model": "Model MobileNetV2",
+        "foto": "adam.jpg", "foto_hover": "adam_hover.jpg",
+        "job": ["Dataset", "EDA", "Preprocessing", "Studi literatur", "Analisis model MobileNetV2"],
+    },
+    {
+        "nama": "Daffa' Raihandi", "nim": "J0404241038", "peran": "Integrasi Aplikasi", "model": "Model EfficientNetB0",
+        "foto": "daffa.jpg", "foto_hover": "daffa_hover.jpg",
+        "job": ["Aplikasi", "Deployment", "Video demo", "Dokumentasi", "Analisis model EfficientNetB0"],
+    },
+    {
+        "nama": "Muhamad Arif Darmawan", "nim": "J0404241134", "peran": "Pengelola Protokol", "model": "Model ResNet50",
+        "foto": "arif.jpg", "foto_hover": "arif_hover.jpg",
+        "job": ["Pemodelan", "Tuning", "Evaluasi", "Analisis model ResNet50"],
+    },
 ]
 DOSEN = {"nama": "Dodik Ariyanto, S.T.P., M.Si.", "peran": "Dosen Pengampu", "foto": "dodik.jpg"}
 GITHUB = "https://github.com/Wandarix/Sampeu.ai"
@@ -41,10 +53,15 @@ html(
 html('<div class="d-title" style="text-align:center">Anggota Kelompok</div>')
 cards = ""
 for m in TEAM:
+    jobs = "".join(f"<li>{j}</li>" for j in m["job"])
     cards += (
-        f'<div class="photo"><img src="{img_uri(ASSETS / "team" / m["foto"])}" alt="{m["nama"]}">'
+        f'<div class="photo" tabindex="0">'
+        f'<img class="p1" src="{img_uri(ASSETS / "team" / m["foto"])}" alt="{m["nama"]}">'
+        f'<img class="p2" src="{img_uri(ASSETS / "team" / m["foto_hover"])}" alt="" aria-hidden="true">'
+        f'<div class="shade"></div>'
         f'<div class="ov"><span class="role">{m["peran"]}</span>'
-        f'<div class="nm">{m["nama"]}</div><div class="mdl">{m["model"]}</div></div></div>'
+        f'<div class="nm">{m["nama"]}</div><div class="nim">{m["nim"]}</div><div class="mdl">{m["model"]}</div>'
+        f'<div class="jobs"><div><div class="jt">Jobdesk</div><ul>{jobs}</ul></div></div></div></div>'
     )
 html(f'<div class="grid grid-3">{cards}</div>')
 

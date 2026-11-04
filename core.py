@@ -187,25 +187,48 @@ div[class*="st-key-card-"] {
 .ring-in span { font-size: 0.62rem; letter-spacing: 0.08em; color: %SLATE%; }
 @media (max-width: 600px) { .res { flex-direction: column-reverse; align-items: flex-start; } }
 
-.photo { position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 3/4; background: #E2E8F0; }
-.photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.photo .ov { position: absolute; inset: auto 0 0 0; padding: 60px 18px 16px 18px;
-    background: linear-gradient(to top, rgba(0,23,61,0.88), rgba(0,23,61,0)); }
+.photo { position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 3/4; background: #E2E8F0;
+    cursor: pointer; outline: none; isolation: isolate; -webkit-tap-highlight-color: transparent; }
+.photo:focus-visible { box-shadow: 0 0 0 3px %MINT%; }
+.photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: opacity .45s ease, transform .7s ease; }
+.photo img.p2 { opacity: 0; }
+.photo:hover img.p2, .photo:focus img.p2 { opacity: 1; }
+.photo:hover img.p1, .photo:focus img.p1 { transform: scale(1.04); }
+.photo .shade { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.photo .shade::before, .photo .shade::after { content: ""; position: absolute; inset: 0; transition: opacity .35s ease; }
+.photo .shade::before { background: linear-gradient(to top, rgba(0,23,61,0.88) 0%, rgba(0,23,61,0) 45%); }
+.photo .shade::after { opacity: 0;
+    background: linear-gradient(to top, rgba(0,23,61,0.96) 0%, rgba(0,23,61,0.88) 36%, rgba(0,23,61,0.4) 62%, rgba(0,23,61,0) 90%); }
+.photo:hover .shade::before, .photo:focus .shade::before { opacity: 0; }
+.photo:hover .shade::after, .photo:focus .shade::after { opacity: 1; }
+.photo .ov { position: absolute; inset: auto 0 0 0; z-index: 2; padding: 60px 18px 16px 18px; }
 .photo .role { display: inline-block; background: %MINT%; color: %NAVY%; border-radius: 999px;
     padding: 2px 10px; font-size: 0.72rem; font-weight: 700; margin-bottom: 6px; }
 .photo .nm { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: #fff; font-size: 1.05rem; line-height: 1.25; }
+.photo .nim { display: none; color: #A7F3D0; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.04em; margin-top: 2px; }
 .photo .mdl { color: #CBD5E1; font-size: 0.8rem; margin-top: 2px; }
+.photo .jobs { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows .4s ease, opacity .3s ease; }
+.photo .jobs > div { overflow: hidden; min-height: 0; }
+.photo .jt { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6CF8BB; margin: 12px 0 7px 0; }
+.photo .jobs ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.photo .jobs li { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.24); color: #fff;
+    border-radius: 999px; padding: 3px 10px; font-size: 0.76rem; font-weight: 500; line-height: 1.35; }
+.photo:hover .jobs, .photo:focus .jobs { grid-template-rows: 1fr; opacity: 1; }
+.photo:hover .nim, .photo:focus .nim { display: block; }
+.photo:hover .mdl, .photo:focus .mdl { display: none; }
 .lect { display: flex; gap: 20px; align-items: center; }
 .lect img { width: 110px; height: 128px; border-radius: 18px; object-fit: cover; border: 2px solid %MINT_TINT%; }
 .footer { color: %SLATE%; font-size: 0.8rem; text-align: center; margin: 32px 0 8px 0; }
 
-/* Sticky footer lintas perangkat: halaman pendek mengisi viewport, halaman panjang tetap natural. */
-.block-container > div[data-testid="stVerticalBlock"] {
-    min-height: calc(100vh - 7rem);
+/* Footer menempel ke dasar layar: tanpa padding bawah, dan footer didorong ke bawah pada halaman pendek. */
+.block-container { padding-top: 5.6rem !important; padding-bottom: 0 !important; }
+.block-container > [data-testid="stVerticalBlock"] {
+    min-height: calc(100vh - 5.6rem); min-height: calc(100dvh - 5.6rem);
 }
-div[class*="st-key-sitefoot"] { margin-top: auto !important; }
+.block-container > [data-testid="stVerticalBlock"] > div[class*="st-key-sitefoot"],
+.block-container > [data-testid="stVerticalBlock"] > *:has(div[class*="st-key-sitefoot"]) { margin-top: auto !important; }
 
-.block-container { padding-top: 5.6rem !important; }
 [data-testid="stHeader"] { background: transparent !important; backdrop-filter: none !important; border-bottom: 0 !important; }
 
 div[class*="st-key-topnav"] {
@@ -233,65 +256,50 @@ div[class*="st-key-navcta"] a { background: %EMERALD% !important; box-shadow: in
 div[class*="st-key-navcta"] a:hover { background: #047857 !important; box-shadow: 0 6px 18px rgba(5,150,105,0.4); }
 div[class*="st-key-navcta"] a p, div[class*="st-key-navcta"] a span { color: #fff !important; }
 .navlogo { height: 34px; display: block; }
+/* Navbar mobile memakai deretan tombol sendiri (bukan kolom desktop yang menyempit). */
+@media (min-width: 761px) {
+    div[class*="st-key-mobilenav"], div[class*="st-key-topnav"] > *:has(> div[class*="st-key-mobilenav"]) { display: none !important; }
+}
 @media (max-width: 760px) {
-    /* Navbar mobile: tiga menu memakai grid agar setiap tautan mendapat lebar nyata. */
     .block-container { padding-top: 5.0rem !important; padding-bottom: 0 !important; }
+    .block-container > [data-testid="stVerticalBlock"] {
+        min-height: calc(100vh - 5rem); min-height: calc(100dvh - 5rem);
+    }
     div[class*="st-key-topnav"] {
-        top: 8px; left: 50%; transform: translateX(-50%);
-        width: calc(100vw - 20px); max-width: 520px;
-        padding: 6px 7px; border-radius: 22px;
+        top: 8px; width: calc(100vw - 20px); max-width: 520px;
+        padding: 5px 6px; border-radius: 26px;
     }
-    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] {
-        display: grid !important;
-        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-        gap: 4px !important; width: 100% !important;
-    }
-    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
-        display: block !important; width: auto !important;
-        min-width: 0 !important; flex: initial !important; padding: 0 !important;
-    }
-    /* Sembunyikan logo dan CTA; sisakan Beranda, Deteksi Penyakit, Tim Kami. */
-    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]:first-child,
-    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"] > [data-testid="stColumn"]:last-child {
-        display: none !important;
-    }
-    div[class*="st-key-topnav"] [data-testid="stColumn"] > div { width: 100% !important; }
-    div[class*="st-key-topnav"] a {
-        display: flex !important; width: 100% !important; min-width: 0 !important;
-        min-height: 44px; padding: 7px 3px !important; margin: 0 !important;
-        justify-content: center !important; text-align: center;
-    }
-    div[class*="st-key-topnav"] a p,
-    div[class*="st-key-topnav"] a span {
-        font-size: clamp(0.68rem, 2.8vw, 0.82rem) !important;
-        line-height: 1.15 !important; white-space: normal !important;
-        overflow-wrap: normal !important; word-break: normal !important;
-        text-align: center; margin: 0 !important;
-    }
-    div[class*="st-key-topnav"] a span[data-testid="stIconMaterial"] { display: none !important; }
+    /* Sembunyikan baris kolom desktop (logo, tiga tautan, tombol CTA). */
+    div[class*="st-key-topnav"] [data-testid="stHorizontalBlock"],
+    div[class*="st-key-topnav"] > *:has(> [data-testid="stHorizontalBlock"]) { display: none !important; }
 
-    /* Footer tetap di bawah pada halaman pendek, tetapi mengikuti konten pada halaman panjang. */
-    .block-container > div[data-testid="stVerticalBlock"] {
-        min-height: calc(100vh - 5rem);
+    div[class*="st-key-mobilenav"] {
+        display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px !important; width: 100%;
     }
-    div[class*="st-key-sitefoot"] {
-        margin-top: auto !important; margin-bottom: 0 !important;
-        border-radius: 24px 24px 0 0 !important;
-        padding: 24px 22px 14px !important;
+    div[class*="st-key-mobilenav"] > * { min-width: 0 !important; width: 100% !important; }
+    div[class*="st-key-mobilenav"] [data-testid="stElementContainer"],
+    div[class*="st-key-mobilenav"] [data-testid="stButton"],
+    div[class*="st-key-mobilenav"] div[class*="st-key-mbtn"] { width: 100% !important; min-width: 0 !important; }
+    div[class*="st-key-mobilenav"] button {
+        width: 100% !important; min-height: 44px; padding: 6px 4px !important; border-radius: 999px !important;
+        border: 0 !important; background: transparent !important; box-shadow: none !important;
+        display: flex; align-items: center; justify-content: center;
     }
-    div[class*="st-key-sitefoot"] [data-testid="stHorizontalBlock"] {
-        gap: 1.1rem !important;
+    div[class*="st-key-mobilenav"] button * { max-width: 100%; overflow: visible !important; }
+    div[class*="st-key-mobilenav"] button p {
+        margin: 0 !important; text-align: center; white-space: normal; line-height: 1.15 !important;
+        font-size: clamp(0.7rem, 3vw, 0.86rem) !important; font-weight: 600; color: %SLATE% !important;
     }
-    div[class*="st-key-sitefoot"] [data-testid="stColumn"] {
-        min-width: 0 !important;
-    }
+    div[class*="st-key-mobilenav"] button:hover, div[class*="st-key-mobilenav"] button:active { background: %MINT_TINT% !important; }
+    div[class*="st-key-mbtn-on"] button { background: #6CF8BB !important; box-shadow: 0 2px 10px rgba(16,185,129,0.28) !important; }
+    div[class*="st-key-mbtn-on"] button p { color: %NAVY% !important; font-weight: 700; }
+
+    /* Footer menempel di dasar layar dengan sudut atas membulat. */
+    div[class*="st-key-sitefoot"] { padding: 24px 22px calc(14px + env(safe-area-inset-bottom, 0px)) !important; }
+    div[class*="st-key-sitefoot"] [data-testid="stHorizontalBlock"] { gap: 1.1rem !important; }
+    div[class*="st-key-sitefoot"] [data-testid="stColumn"] { min-width: 0 !important; }
     div[class*="st-key-sitefoot"] .fdesc { max-width: none; }
     div[class*="st-key-sitefoot"] .fbar { line-height: 1.5; }
-}
-@media (max-width: 360px) {
-    div[class*="st-key-topnav"] { width: calc(100vw - 12px); padding: 5px; }
-    div[class*="st-key-topnav"] a { padding: 7px 2px !important; }
-    div[class*="st-key-topnav"] a p { font-size: 0.66rem !important; }
 }
 
 .dcard { display: flex; flex-direction: column; gap: 0; }
@@ -342,7 +350,7 @@ div[class*="st-key-navcta"] a p, div[class*="st-key-navcta"] a span { color: #ff
 .cta2 .p { color: #CBD5E1; max-width: 560px; line-height: 1.6; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .tag-o { border: 1px solid %BORDER%; background: #F8FAFC; color: %SLATE%; border-radius: 999px; padding: 3px 12px; font-size: 0.76rem; font-weight: 600; }
-div[class*="st-key-sitefoot"] { background: #EFF4FF; border-radius: 28px; padding: 28px 32px 14px 32px; margin-top: 40px; }
+div[class*="st-key-sitefoot"] { background: #EFF4FF; border-radius: 28px 28px 0 0; padding: 28px 32px calc(16px + env(safe-area-inset-bottom, 0px)) 32px; margin-top: 40px; margin-bottom: 0 !important; }
 div[class*="st-key-sitefoot"] a { text-decoration: none !important; padding: 0 !important; min-height: 0 !important; background: transparent !important; justify-content: flex-start; }
 div[class*="st-key-sitefoot"] a p { color: %SLATE% !important; font-size: 0.9rem; }
 div[class*="st-key-sitefoot"] a:hover p { color: %EMERALD% !important; }
@@ -401,6 +409,12 @@ def render_nav(active):
         with cols[4]:
             with st.container(key="navcta"):
                 st.page_link("views/deteksi.py", label="Mulai Deteksi", icon=":material/photo_camera:")
+        # Navigasi mobile: tombol biasa + st.switch_page (CSS menampilkannya hanya di layar sempit).
+        with st.container(key="mobilenav"):
+            for path, label, slug, _ in items:
+                with st.container(key=f"mbtn-{'on' if label == active else 'off'}-{slug}"):
+                    if st.button(label, key=f"msw-{slug}") and label != active:
+                        st.switch_page(path)
 
 
 # ----------------------- Model & prediksi (TensorFlow dimuat malas) -----------------------
