@@ -94,7 +94,9 @@ STATUS = {  # (teks, latar)
 _CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
-.stApp { font-family: 'Inter', sans-serif; background: #F8FAFC; }
+.stApp { font-family: 'Inter', sans-serif; background-color: #F8FAFC;
+    background-image: linear-gradient(rgba(248,250,252,0.62), rgba(248,250,252,0.62)), url("%POLA%");
+    background-size: auto, 440px 440px; }
 .block-container { max-width: 1200px; padding-top: 3.2rem; }
 [data-testid="stHeader"] {
     background: rgba(255,255,255,0.78); backdrop-filter: blur(20px) saturate(180%);
@@ -252,10 +254,9 @@ div[class*="st-key-topnav"] a:hover { background: %MINT_TINT% !important; transf
 div[class*="st-key-topnav"] a:hover p, div[class*="st-key-topnav"] a:hover span { color: %NAVY% !important; }
 div[class*="st-key-navlink-on"] a { background: #6CF8BB !important; box-shadow: 0 2px 10px rgba(16,185,129,0.28); }
 div[class*="st-key-navlink-on"] a p, div[class*="st-key-navlink-on"] a span { color: %NAVY% !important; font-weight: 700; }
-div[class*="st-key-navcta"] a { background: %EMERALD% !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.25), 0 4px 12px rgba(5,150,105,0.25); }
-div[class*="st-key-navcta"] a:hover { background: #047857 !important; box-shadow: 0 6px 18px rgba(5,150,105,0.4); }
-div[class*="st-key-navcta"] a p, div[class*="st-key-navcta"] a span { color: #fff !important; }
-.navlogo { height: 34px; display: block; }
+.navlogo-wrap { position: fixed; left: 18px; top: 50%; transform: translateY(-50%); z-index: 2; display: flex; align-items: center;
+    height: 32px; margin: 0; padding: 0; }
+.navlogo { height: 32px; width: auto; display: block; margin: 0; }
 /* Navbar mobile memakai deretan tombol sendiri (bukan kolom desktop yang menyempit). */
 @media (min-width: 761px) {
     div[class*="st-key-mobilenav"], div[class*="st-key-topnav"] > *:has(> div[class*="st-key-mobilenav"]) { display: none !important; }
@@ -301,6 +302,66 @@ div[class*="st-key-navcta"] a p, div[class*="st-key-navcta"] a span { color: #ff
     div[class*="st-key-sitefoot"] .fdesc { max-width: none; }
     div[class*="st-key-sitefoot"] .fbar { line-height: 1.5; }
 }
+
+.grid-cat { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.grid-cat > .dcard { grid-column: span 2; }
+.grid-cat > .dcard:nth-child(4) { grid-column: 2 / span 2; }
+.grid-cat > .dcard:nth-child(5) { grid-column: 4 / span 2; }
+@media (max-width: 900px) {
+    .grid-cat { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cat > .dcard:nth-child(n) { grid-column: auto; }
+    .grid-cat > .dcard:nth-child(5) { grid-column: 1 / -1; }
+}
+@media (max-width: 600px) {
+    .grid-cat { grid-template-columns: 1fr; }
+    .grid-cat > .dcard:nth-child(5) { grid-column: auto; }
+}
+
+/* Ikon daun/kuncup dan ornamen sisi hero */
+.sthead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+.ico { width: 44px; height: 44px; object-fit: contain; flex: 0 0 auto; }
+.cd { display: inline-flex; align-items: center; gap: 6px; }
+.ico-s { width: 26px; height: 26px; object-fit: contain; }
+.stApp { --ow: clamp(64px, calc(80px + (100vw - 1200px) / 2 - 22px), 136px); }
+@media (min-width: 1280px) {
+    .stApp::before, .stApp::after { content: ""; position: fixed; top: 0; height: 100vh; z-index: 1; pointer-events: none;
+        width: var(--ow); background-repeat: repeat-y; background-size: var(--ow) auto; opacity: 0.95; }
+    .stApp::before { left: 0; background-image: url("%ORN_L%"); background-position: left top; }
+    .stApp::after { right: 0; background-image: url("%ORN_R%"); background-position: right top; }
+}
+
+/* Aset ilustrasi: hero, judul bagian, ornamen, dan Sibi di hasil */
+.hero-art { position: relative; border-radius: 28px; overflow: hidden; aspect-ratio: 5 / 4; background: #E6F4EC;
+    border: 1px solid %BORDER%; box-shadow: 0 24px 48px -24px rgba(0,23,61,0.25); }
+.hero-art .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero-art .sibi-h { position: absolute; left: 50%; bottom: 5%; width: 46%; height: auto; transform: translateX(-50%);
+    filter: drop-shadow(0 12px 12px rgba(0,23,61,0.18)); animation: sibi-bob 3.2s ease-in-out infinite; }
+.hero-art .hi { position: absolute; top: 9%; left: 7%; max-width: 62%; background: #fff; border: 1px solid #BBF7D0;
+    border-radius: 18px 18px 18px 4px; padding: 10px 16px; font-weight: 600; font-size: 0.95rem; line-height: 1.4; color: %NAVY%;
+    box-shadow: 0 8px 20px -8px rgba(0,23,61,0.18); }
+@keyframes sibi-bob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-9px); } }
+.sech { display: flex; align-items: center; justify-content: space-between; gap: 28px; margin: 44px 0 14px 0; }
+.sech .tx { flex: 1 1 50%; min-width: 0; }
+.sech .art { flex: 0 1 40%; min-width: 0; }
+.sech .art img, .banner, .empty-art { display: block; width: 100%; height: auto; border-radius: 22px; border: 1px solid %BORDER%;
+    box-shadow: 0 14px 30px -18px rgba(0,23,61,0.28); }
+.banner { width: min(100%, 640px); margin: 18px auto 22px auto; }
+.empty-art { max-width: 420px; margin: 0 auto 16px auto; }
+.orn { display: block; width: min(100%, 760px); height: auto; margin: 34px auto 6px auto; }
+@media (max-width: 760px) {
+    .sech { flex-direction: column; align-items: stretch; gap: 16px; }
+    .sech .art { order: 2; }
+    .hero-art { aspect-ratio: 1 / 1; }
+    .hero-art .hi { font-size: 0.86rem; padding: 8px 13px; top: 6%; max-width: 70%; }
+    .hero-art .sibi-h { width: 50%; }
+}
+.say { display: flex; align-items: center; gap: 14px; margin: 0 0 12px 0; }
+.say img { width: 84px; height: 84px; object-fit: contain; flex: 0 0 auto; }
+.say .bub { position: relative; background: #fff; border: 1px solid #BBF7D0; border-radius: 18px; padding: 11px 16px;
+    font-weight: 600; font-size: 0.95rem; line-height: 1.4; color: %NAVY%; box-shadow: 0 6px 18px -8px rgba(0,23,61,0.15); }
+.say .bub::before { content: ""; position: absolute; left: -7px; top: 50%; width: 12px; height: 12px; background: #fff;
+    border-left: 1px solid #BBF7D0; border-bottom: 1px solid #BBF7D0; transform: translateY(-50%) rotate(45deg); }
+@media (prefers-reduced-motion: reduce) { .hero-art .sibi-h { animation: none; } }
 
 /* Maskot Sibi saat menunggu hasil deteksi */
 .sibi { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 26px 20px 22px;
@@ -386,7 +447,11 @@ CSS = (
 
 
 def inject_css():
-    st.markdown(CSS, unsafe_allow_html=True)
+    st.markdown(
+        CSS.replace("%POLA%", art("pola.jpg")).replace("%ORN_L%", art("ornamen-kiri.webp", "image/webp"))
+        .replace("%ORN_R%", art("ornamen-kanan.webp", "image/webp")),
+        unsafe_allow_html=True,
+    )
 
 
 def html_str(s):
@@ -404,7 +469,7 @@ def sibi_loading():
     return html_str(
         f'''
         <div class="card2 sibi" role="status" aria-live="polite">
-        <img src="{img_uri(ASSETS / "sibi.png", "image/png")}" alt="Sibi, maskot sampeu.ai">
+        <img src="{art("sibi_scan.webp", "image/webp")}" alt="Sibi, maskot sampeu.ai">
         <div class="bubble">Sebentar ya, lagi dicek dulu sama Sibi<span class="dots"><i></i><i></i><i></i></span></div>
         <p>Sibi lagi memeriksa daun dan menyiapkan peta Grad-CAM.</p>
         </div>
@@ -415,6 +480,26 @@ def sibi_loading():
 @st.cache_data
 def img_uri(path, mime="image/jpeg"):
     return f"data:{mime};base64," + base64.b64encode(Path(path).read_bytes()).decode()
+
+
+def art(name, mime="image/jpeg"):
+    """Data-URI untuk berkas di assets/ilustrasi/."""
+    return img_uri(ASSETS / "ilustrasi" / name, mime)
+
+
+def sibi_say(kind):
+    """Sibi dengan ekspresi sesuai hasil: healthy, disease, atau uncertain."""
+    pose, text = {
+        "healthy": ("sibi_senang.webp", "Daunnya sehat! Tetap rawat rutin ya."),
+        "disease": ("sibi_laporan.webp", "Sibi menemukan tanda penyakit. Cek cara penanganannya di bawah ya."),
+        "uncertain": ("sibi_bingung.webp", "Hmm, Sibi kurang yakin. Coba foto ulang yang lebih jelas ya."),
+    }[kind]
+    return html_str(
+        f'''
+        <div class="say"><img src="{art(pose, "image/webp")}" alt="Sibi">
+        <div class="bub">{text}</div></div>
+        '''
+    )
 
 
 def penyakit_img(code):
@@ -432,19 +517,16 @@ def render_nav(active):
              ("views/deteksi.py", "Deteksi Penyakit", "detect", ":material/biotech:"),
              ("views/tim.py", "Tim Kami", "team", ":material/groups:")]
     with st.container(key="topnav"):
-        cols = st.columns([1.3, 1.05, 1.7, 1.15, 1.6], vertical_alignment="center")
+        cols = st.columns([1.5, 1.0, 1.55, 1.1], vertical_alignment="center")
         with cols[0]:
             st.markdown(
-                f'<img class="navlogo" src="{img_uri(ASSETS / "logo.png", "image/png")}" alt="sampeu.ai">',
+                f'<div class="navlogo-wrap"><img class="navlogo" src="{img_uri(ASSETS / "logo.png", "image/png")}" alt="sampeu.ai"></div>',
                 unsafe_allow_html=True,
             )
         for col, (path, label, slug, icon) in zip(cols[1:4], items):
             with col:
                 with st.container(key=f"navlink-{'on' if label == active else 'off'}-{slug}"):
                     st.page_link(path, label=label, icon=icon)
-        with cols[4]:
-            with st.container(key="navcta"):
-                st.page_link("views/deteksi.py", label="Mulai Deteksi", icon=":material/photo_camera:")
         # Navigasi mobile: tombol biasa + st.switch_page (CSS menampilkannya hanya di layar sempit).
         with st.container(key="mobilenav"):
             for path, label, slug, _ in items:
