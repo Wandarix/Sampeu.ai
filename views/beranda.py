@@ -2,7 +2,7 @@ import streamlit as st
 
 from core import (
     ASSETS, BATASAN, CARE_NOTE, CLASS_CARE, CLASS_INFO, CLASS_SYMPTOMS, CLASS_TAG,
-    footer, html, img_uri, penyakit_img,
+    art, footer, html, img_uri, penyakit_img,
 )
 
 
@@ -22,7 +22,7 @@ def _care(code):
 c1, c2 = st.columns([1.2, 1], gap="large", vertical_alignment="center")
 with c1:
     html(
-        """
+        f"""
         <div class="eyebrow">● Diagnostik pertanian berbasis AI</div>
         <div class="d-hero">Deteksi Cepat Penyakit <span class="g">Daun Singkong</span> dari Foto</div>
         <p class="lead">Klasifikasi daun singkong dengan EfficientNetB0 dan visualisasi Grad-CAM,
@@ -42,20 +42,17 @@ with c1:
         """
     )
 with c2:
-    hero_photo = penyakit_img("CMD")
-    body = (
-        f'<img src="{hero_photo}" alt="Contoh daun CMD">' if hero_photo
-        else f'<img src="{img_uri(ASSETS / "symbol.png", "image/png")}" alt="" style="object-fit:contain;height:200px">'
-    )
     html(
         f"""
-        <div class="card2 mock">
-        <div class="mtop"><span>Contoh tampilan hasil</span><span class="chip">CMD</span></div>
-        {body}
-        <div class="mfoot"><span class="chip-g">Grad-CAM overlay</span><span class="chip">EfficientNetB0</span></div>
+        <div class="hero-art">
+        <img class="bg" src="{art("hero-kebun.jpg")}" alt="Kebun singkong">
+        <div class="hi">Halo, aku <b>Sibi</b>! Foto daunnya, biar aku yang cek.</div>
+        <img class="sibi-h" src="{art("sibi_halo.webp", "image/webp")}" alt="Sibi, maskot sampeu.ai">
         </div>
         """
     )
+
+html(f'<img class="orn" src="{art("ornamen-atas.webp", "image/webp")}" alt="">')
 
 # ---------------- Arsitektur ----------------
 html(
@@ -79,50 +76,62 @@ html(
 )
 
 # ---------------- Katalog penyakit ----------------
-html('<div class="eyebrow2" style="margin-top:44px">Taksonomi lapangan</div>'
-     '<div class="d-title" style="margin-top:6px">Katalog 5 Kondisi Daun Singkong</div>'
-     '<div class="sub">Gejala utama dan cara penanganan awal. Konsultasikan hasil dengan penyuluh pertanian.</div>')
+html(
+    f'''
+    <div class="sech"><div class="tx"><div class="eyebrow2">Taksonomi lapangan</div>
+    <div class="d-title" style="margin-top:6px">Katalog 5 Kondisi Daun Singkong</div>
+    <div class="sub">Gejala utama dan cara penanganan awal. Konsultasikan hasil dengan penyuluh pertanian.</div></div>
+    <div class="art"><img src="{art("ensiklopedia.jpg")}" alt="Ilustrasi katalog penyakit daun singkong"></div></div>
+    '''
+)
+
+
+DAUN = art("daun.webp", "image/webp")
+KUNCUP = art("kuncup.webp", "image/webp")
 
 
 def dis_card(code):
-    tag_cls = "ok" if code == "Healthy" else ("bad" if code in ("CBB", "CBSD", "CMD") else "")
+    sehat = code == "Healthy"
+    tag_cls = "ok" if sehat else ("bad" if code in ("CBB", "CBSD", "CMD") else "")
+    tag = "Kondisi daun sehat" if sehat else CLASS_TAG[code]
+    title = "Daun sehat (Healthy)" if sehat else CLASS_INFO[code]
+    lab1, lab2 = ("Ciri", "Perawatan") if sehat else ("Gejala utama", "Cara penanganan")
+    icon = KUNCUP if sehat else DAUN
     return (
-        f'<div class="card2 dcard"><div class="dtop"><span class="tagc {tag_cls}">{CLASS_TAG[code]}</span>'
-        f'<span class="code">{code}</span></div>{_photo(code)}<h4>{CLASS_INFO[code]}</h4>'
-        f'<div class="lab">Gejala utama</div><p>{CLASS_SYMPTOMS[code]}</p>'
-        f'<div class="lab care">Cara penanganan</div><ul>{_care(code)}</ul></div>'
+        f'<div class="card2 dcard"><div class="dtop"><span class="tagc {tag_cls}">{tag}</span>'
+        f'<span class="cd"><img class="ico-s" src="{icon}" alt=""><span class="code">{code}</span></span></div>{_photo(code)}<h4>{title}</h4>'
+        f'<div class="lab">{lab1}</div><p>{CLASS_SYMPTOMS[code]}</p>'
+        f'<div class="lab care">{lab2}</div><ul>{_care(code)}</ul></div>'
     )
 
 
-healthy = (
-    '<div class="card2 dcard wide"><div class="inner">' + _photo("Healthy") +
-    '<div><div class="dtop"><span class="tagc ok">Kondisi daun sehat</span><span class="code">Healthy</span></div>'
-    "<h4>Daun sehat (Healthy)</h4>"
-    f'<div class="lab">Ciri</div><p>{CLASS_SYMPTOMS["Healthy"]}</p>'
-    f'<div class="lab care">Perawatan</div><ul>{_care("Healthy")}</ul></div></div></div>'
-)
-html('<div class="grid grid-3">' + "".join(dis_card(c) for c in ["CMD", "CBB", "CGM", "CBSD"]) + healthy + "</div>")
+html('<div class="grid grid-cat">' + "".join(dis_card(c) for c in ["CMD", "CBB", "CGM", "CBSD", "Healthy"]) + "</div>")
 st.caption(CARE_NOTE)
 
 # ---------------- Alur kerja ----------------
-html('<div style="text-align:center;margin-top:44px"><span class="eyebrow">ALUR KERJA PENGGUNA</span></div>'
-     '<div class="d-title" style="text-align:center;margin-top:0">4 Langkah Mudah Deteksi AI di Lapangan</div>'
-     '<div class="sub" style="text-align:center">Dirancang intuitif untuk petani dan penyuluh, tanpa perlu keahlian teknis.</div>')
+html('<div class="d-title" style="text-align:center;margin-top:44px">4 Langkah Mudah Deteksi AI di Lapangan</div>'
+     '<div class="sub" style="text-align:center">Dirancang intuitif untuk petani dan penyuluh, tanpa perlu keahlian teknis.</div>'
+     f'<img class="banner" src="{art("deteksi.jpg")}" alt="Ilustrasi deteksi daun singkong">')
 html(
-    """
+    f"""
     <div class="grid grid-4">
-    <div class="card2"><div class="num">1</div><h4>Unggah citra daun</h4><p>Unggah foto daun singkong atau ambil langsung lewat kamera. Satu daun, dekat, terang, dan fokus.</p><div class="stepf">Format JPG atau PNG</div></div>
-    <div class="card2"><div class="num">2</div><h4>Pra-pemrosesan otomatis</h4><p>Foto diubah ke RGB dan ukurannya disesuaikan secara otomatis, tanpa pengaturan apa pun.</p><div class="stepf">Otomatis</div></div>
-    <div class="card2"><div class="num">3</div><h4>Inferensi EfficientNetB0</h4><p>Model menghitung probabilitas lima kelas. Bila ragu, aplikasi menyarankan foto ulang.</p><div class="stepf">Keluaran softmax 5 kelas</div></div>
-    <div class="card2"><div class="num">4</div><h4>Grad-CAM dan penanganan</h4><p>Peta panas menunjukkan area yang memengaruhi prediksi, disertai cara penanganan awal dan laporan PDF.</p><div class="stepf">Laporan PDF siap unduh</div></div>
+    <div class="card2"><div class="sthead"><div class="num">1</div><img class="ico" src="{KUNCUP}" alt=""></div><h4>Unggah citra daun</h4><p>Unggah foto daun singkong atau ambil langsung lewat kamera. Satu daun, dekat, terang, dan fokus.</p><div class="stepf">Format JPG atau PNG</div></div>
+    <div class="card2"><div class="sthead"><div class="num">2</div><img class="ico" src="{KUNCUP}" alt=""></div><h4>Pra-pemrosesan otomatis</h4><p>Foto diubah ke RGB dan ukurannya disesuaikan secara otomatis, tanpa pengaturan apa pun.</p><div class="stepf">Otomatis</div></div>
+    <div class="card2"><div class="sthead"><div class="num">3</div><img class="ico" src="{DAUN}" alt=""></div><h4>Inferensi EfficientNetB0</h4><p>Model menghitung probabilitas lima kelas. Bila ragu, aplikasi menyarankan foto ulang.</p><div class="stepf">Keluaran softmax 5 kelas</div></div>
+    <div class="card2"><div class="sthead"><div class="num">4</div><img class="ico" src="{DAUN}" alt=""></div><h4>Grad-CAM dan penanganan</h4><p>Peta panas menunjukkan area yang memengaruhi prediksi, disertai cara penanganan awal dan laporan PDF.</p><div class="stepf">Laporan PDF siap unduh</div></div>
     </div>
     """
 )
 
 # ---------------- Spesifikasi & batasan ----------------
-html('<div class="eyebrow2" style="margin-top:44px">Model terbuka dan transparan</div>'
-     '<div class="d-title" style="margin-top:6px">Spesifikasi dan Batasan</div>'
-     '<div class="sub">Transparan tentang apa yang dikerjakan model dan apa yang belum.</div>')
+html(
+    f'''
+    <div class="sech"><div class="tx"><div class="eyebrow2">Model terbuka dan transparan</div>
+    <div class="d-title" style="margin-top:6px">Spesifikasi dan Batasan</div>
+    <div class="sub">Transparan tentang apa yang dikerjakan model dan apa yang belum.</div></div>
+    <div class="art"><img src="{art("komparasi.jpg")}" alt="Ilustrasi perbandingan model"></div></div>
+    '''
+)
 s1, s2 = st.columns(2, gap="medium")
 with s1:
     html(
@@ -154,4 +163,5 @@ html(
 if st.button("Buka Modul Deteksi", type="primary", icon=":material/arrow_forward:", key="cta"):
     st.switch_page("views/deteksi.py")
 
+html(f'<img class="orn" src="{art("ornamen-bawah.webp", "image/webp")}" alt="">')
 footer()

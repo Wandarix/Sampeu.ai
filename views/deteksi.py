@@ -8,7 +8,7 @@ from PIL import Image
 from core import (
     BATASAN, CARE_NOTE, CLASS_CARE, CLASS_INFO, CLASS_NAMES, CLASS_SYMPTOMS, CONF_THRESHOLD, EMERALD,
     MARGIN_THRESHOLD, MINT, STATUS, bar, build_report, footer, gradcam, html, load_model, overlay, pct, penyakit_img,
-    prepare, sibi_loading,
+    prepare, sibi_loading, sibi_say, art,
 )
 
 html(
@@ -49,8 +49,9 @@ with left:
 with right:
     if img is None:
         html(
-            """
+            f"""
             <div class="card2" style="min-height:260px;display:flex;flex-direction:column;justify-content:center;text-align:center">
+            <img class="empty-art" src="{art("deteksi.jpg")}" alt="Ilustrasi deteksi daun singkong">
             <h4>Hasil akan tampil di sini</h4>
             <p>Unggah atau ambil satu foto daun singkong untuk memulai.</p></div>
             """
@@ -97,6 +98,7 @@ with right:
             text = f"Ciri umum: {CLASS_SYMPTOMS[label]}"
         fg, bg = STATUS[kind]
         deg = max(min(conf, 1.0), 0.0) * 100
+        html(sibi_say(kind))
         html(
             f"""
             <div class="res" style="background:{bg};border-color:{fg}40">

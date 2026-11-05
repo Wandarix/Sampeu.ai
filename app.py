@@ -9,7 +9,7 @@ USE_CUSTOM_NAV = True
 
 st.set_page_config(
     page_title="sampeu.ai",
-    page_icon=Image.open(ASSETS / "symbol.png"),
+    page_icon=Image.open(ASSETS / "favicon.png"),
     layout="wide",
 )
 inject_css()

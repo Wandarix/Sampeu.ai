@@ -31,7 +31,6 @@ html(
     <div class="d-hero">Tim di Balik <span class="g">sampeu.ai</span></div>
     <p class="lead" style="margin:0 auto 12px auto">Proyek mata kuliah Machine Learning (Semester 5):
     Klasifikasi Penyakit Daun Singkong pada Data Tidak Seimbang - Perbandingan MobileNetV2, ResNet50, dan EfficientNetB0.</p>
-    <div><span class="chip-g">Data Cassava (Kaggle)</span><span class="chip">Grad-CAM</span><span class="chip">Streamlit</span></div>
     </div>
     """
 )
