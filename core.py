@@ -436,6 +436,43 @@ div[class*="st-key-sitefoot"] a:hover p { color: %EMERALD% !important; }
 .fcol-t { font-size: 0.74rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: %NAVY%; margin-bottom: 8px; }
 .fdesc { color: %SLATE%; font-size: 0.9rem; line-height: 1.6; max-width: 420px; margin-top: 8px; }
 .fbar { border-top: 1px solid #D5E3FC; margin-top: 14px; padding-top: 12px; color: %SLATE%; font-size: 0.78rem; text-align: center; }
+
+/* Panel bagian bergradien + efek pop-up saat di-scroll */
+div[class*="st-key-sec"] { position: relative; border-radius: 32px; padding: 14px 34px 30px 34px; margin: 26px 0;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 24px 48px -34px rgba(0,23,61,0.28), inset 0 1px 0 rgba(255,255,255,0.9); }
+div[class*="st-key-secmodel"], div[class*="st-key-secinfo"] { background: linear-gradient(135deg, #DDEAFF 0%, #F1F6FF 48%, #E1FAEF 100%); }
+div[class*="st-key-seckatalog"], div[class*="st-key-secdosen"] { background: linear-gradient(135deg, #FFF0D6 0%, #FFF9EE 42%, #E3F9EE 100%); }
+div[class*="st-key-secalur"], div[class*="st-key-secanggota"] { background: linear-gradient(160deg, #D8F8E8 0%, #F0FDF7 50%, #DEE9FF 100%); }
+div[class*="st-key-secspek"], div[class*="st-key-sectek"] { background: linear-gradient(135deg, #E8E7FF 0%, #F4F5FF 45%, #D9F2FF 100%); }
+div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-card-input"]) {
+    background: linear-gradient(160deg, #D8F8E8 0%, #F0FDF7 46%, #DEE9FF 100%); border-radius: 32px; padding: 26px 26px 30px 26px;
+    margin: 12px 0 26px 0; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 24px 48px -34px rgba(0,23,61,0.28); }
+div[class*="st-key-sec"] .sech, div[class*="st-key-sec"] .arch-head { margin-top: 14px; }
+div[class*="st-key-sec"] .d-title { margin-top: 14px; }
+@media (max-width: 760px) {
+    div[class*="st-key-sec"] { padding: 8px 14px 20px 14px; border-radius: 24px; margin: 18px 0; }
+    div[data-testid="stHorizontalBlock"]:has(div[class*="st-key-card-input"]) { padding: 16px 12px 20px 12px; border-radius: 24px; }
+}
+@supports (animation-timeline: view()) {
+    @keyframes pop-up {
+        0% { opacity: 0; translate: 0 46px; scale: 0.94; }
+        60% { opacity: 1; }
+        82% { scale: 1.012; }
+        100% { opacity: 1; translate: 0 0; scale: 1; }
+    }
+    @keyframes pop-panel { from { translate: 0 44px; scale: 0.97; } to { translate: 0 0; scale: 1; } }
+    div[class*="st-key-sec"] { animation: pop-panel ease-out both; animation-timeline: view(); animation-range: entry 0% entry 25%; }
+    :is(.card2, .sech, .arch-head, .banner, .orn, .d-title, .hero-art, .cta2, .photo, .say) {
+        animation: pop-up ease-out both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+    .grid > :nth-child(2) { animation-range: entry 6% entry 66%; }
+    .grid > :nth-child(3) { animation-range: entry 12% entry 72%; }
+    .grid > :nth-child(4) { animation-range: entry 18% entry 78%; }
+    .grid > :nth-child(5) { animation-range: entry 24% entry 84%; }
+    @media (prefers-reduced-motion: reduce) {
+        div[class*="st-key-sec"], :is(.card2, .sech, .arch-head, .banner, .orn, .d-title, .hero-art, .cta2, .photo, .say) { animation: none; }
+    }
+}
 </style>
 """
 
