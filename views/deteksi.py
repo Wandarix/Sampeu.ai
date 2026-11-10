@@ -13,13 +13,13 @@ from core import (
 
 html(
     """
-    <div class="eyebrow">● Inferensi EfficientNetB0</div>
     <div class="d-hero" style="font-size:clamp(1.8rem,4vw,2.8rem)">Deteksi Penyakit Daun Singkong</div>
     <p class="lead">Unggah foto daun singkong atau ambil lewat kamera untuk diagnosis berbasis EfficientNetB0 dengan visualisasi Grad-CAM dan cara penanganannya.</p>
     """
 )
 
-left, right = st.columns([1, 1.35], gap="large")
+layout = st.container(key="det-layout")
+left, right = layout.columns([1, 1.35], gap="large")
 
 # ---------------- Kiri: masukan ----------------
 with left:
@@ -33,7 +33,7 @@ with left:
         file = f1 or f2
         img = Image.open(file).convert("RGB") if file is not None else None
         if img is not None:
-            st.image(img, caption="Foto masukan", width=360)
+            st.image(img, caption="Foto masukan", width="stretch")
 
     with st.container(border=True, key="card-tips"):
         st.markdown("#### Panduan pengambilan foto")
@@ -124,10 +124,10 @@ with right:
                     ov_s = ov.resize((320, 320))
                     if mode == "Berdampingan":
                         a, b = st.columns(2)
-                        a.image(img.resize((320, 320)), caption="Citra asli")
-                        b.image(ov_s, caption="Peta aktivasi (Grad-CAM)")
+                        a.image(img.resize((320, 320)), caption="Citra asli", width="stretch")
+                        b.image(ov_s, caption="Peta aktivasi (Grad-CAM)", width="stretch")
                     else:
-                        st.image(ov_s, caption="Overlay Grad-CAM")
+                        st.image(ov_s, caption="Overlay Grad-CAM", width="stretch")
                     html(
                         """
                         <div class="infobox"><b>Cara membaca Grad-CAM</b>

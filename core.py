@@ -118,8 +118,39 @@ h1, h2, h3, h4, .pjs { font-family: 'Plus Jakarta Sans', sans-serif !important; 
 }
 div[class*="st-key-card-"] {
     background: #fff; border: 1px solid %BORDER% !important; border-radius: 20px;
-    padding: 0.4rem 0.6rem; box-shadow: 0 4px 20px -2px rgba(0,23,61,0.04), 0 2px 6px -1px rgba(0,23,61,0.02);
+    padding: 0.9rem 1rem 1.2rem 1rem !important; overflow: hidden; box-sizing: border-box; min-width: 0; box-shadow: 0 4px 20px -2px rgba(0,23,61,0.04), 0 2px 6px -1px rgba(0,23,61,0.02);
 }
+
+/* Halaman deteksi: di bawah 992px kolom ditumpuk agar foto/hasil tidak saling menimpa */
+.res { flex-wrap: wrap; }
+.res > div:first-child { min-width: 0; flex: 1 1 220px; }
+.res .ttl { overflow-wrap: anywhere; }
+div[class*="st-key-det-layout"] [data-testid="stImage"] img { max-width: 100%; height: auto; }
+div[class*="st-key-det-layout"] [data-testid="stColumn"] { min-width: 0; }
+div[class*="st-key-card-"] > [data-testid="stVerticalBlock"], div[class*="st-key-card-"] [data-testid="stMarkdownContainer"] { min-width: 0; max-width: 100%; }
+.infobox, .bar-row { box-sizing: border-box; max-width: 100%; }
+.bar-row .top span { min-width: 0; overflow-wrap: anywhere; padding-right: 8px; }
+@media (max-width: 992px) {
+    div[class*="st-key-det-layout"] [data-testid="stHorizontalBlock"]:not([data-testid="stColumn"] [data-testid="stHorizontalBlock"]) {
+        flex-direction: column !important; gap: 1rem !important;
+    }
+    div[class*="st-key-det-layout"] [data-testid="stHorizontalBlock"]:not([data-testid="stColumn"] [data-testid="stHorizontalBlock"]) > [data-testid="stColumn"] {
+        width: 100% !important; flex: 1 1 100% !important; min-width: 0 !important;
+    }
+}
+/* Sembunyikan ikon tautan (anchor) otomatis di samping judul */
+[data-testid="stHeaderActionElements"], .stMarkdown h1 a, .stMarkdown h2 a, .stMarkdown h3 a, .stMarkdown h4 a { display: none !important; }
+.linkcard { display: block; text-decoration: none !important; color: #00173D !important; transition: transform .2s ease, box-shadow .2s ease; }
+.linkcard:hover { transform: translateY(-2px); box-shadow: 0 10px 28px -8px rgba(5,150,105,0.25); }
+.linkcard { cursor: pointer; }
+ .linkcard:hover, .linkcard:visited, .linkcard:active { color: #00173D !important; text-decoration: none !important; }
+   .linkcard h4, .linkcard p { color: #00173D !important; }
+.linkcard h4 { display: flex; align-items: center; gap: 8px; }
+.linkcard .lnk { width: 18px; height: 18px; flex: none; background: %EMERALD%; opacity: 0; transform: translateX(-4px);
+    transition: opacity .2s ease, transform .2s ease;
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5'/><path d='M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5'/></svg>") center / contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><path d='M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5'/><path d='M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5'/></svg>") center / contain no-repeat; }
+.linkcard:hover .lnk, .linkcard:focus-visible .lnk { opacity: 1; transform: none; }
 
 .eyebrow {
     display: inline-block; background: %MINT_TINT%; color: %EMERALD%; border: 1px solid #A7F3D0;

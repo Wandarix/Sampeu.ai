@@ -27,7 +27,6 @@ GITHUB = "https://github.com/Wandarix/Sampeu.ai"
 html(
     """
     <div style="text-align:center">
-    <div class="eyebrow">● Penelitian &amp; pengembangan · Kelompok 11 Kelas A</div>
     <div class="d-hero">Tim di Balik <span class="g">sampeu.ai</span></div>
     <p class="lead" style="margin:0 auto 12px auto">Proyek mata kuliah Machine Learning (Semester 5):
     Klasifikasi Penyakit Daun Singkong pada Data Tidak Seimbang - Perbandingan MobileNetV2, ResNet50, dan EfficientNetB0.</p>
@@ -41,8 +40,10 @@ html(
     <div class="card2"><div class="k">Latar belakang</div><h4 style="margin-top:6px">Gejala yang mirip</h4>
     <p>Gejala penyakit pada daun singkong sering mirip satu sama lain. sampeu.ai mencoba membantu skrining awal lewat foto,
     dengan Grad-CAM agar hasilnya bisa diperiksa.</p></div>
-    <div class="card2"><div class="k">Dataset</div><h4 style="margin-top:6px">Cassava Leaf Disease</h4>
-    <p>Dataset Kaggle dengan 21.397 foto dan 5 kelas (CBB, CBSD, CGM, CMD, Healthy). Distribusi kelasnya tidak seimbang.</p></div>
+    <a class="card2 linkcard" href="https://www.kaggle.com/competitions/cassava-leaf-disease-classification/data" target="_blank" rel="noopener noreferrer">
+    <div class="k">Dataset</div><h4 style="margin-top:6px">Cassava Leaf Disease<span class="lnk" aria-hidden="true"></span></h4>
+    <p>Dataset Kaggle dengan 21.397 foto dan 5 kelas (CBB, CBSD, CGM, CMD, Healthy). Distribusi kelasnya tidak seimbang.</p>
+    </a>
     <div class="card2"><div class="k">Model aplikasi</div><h4 style="margin-top:6px">EfficientNetB0</h4>
     <p>Tiga arsitektur dibandingkan pada tahap eksperimen. Aplikasi memakai EfficientNetB0 checkpoint seed 123.</p></div>
     </div>

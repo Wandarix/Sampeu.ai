@@ -23,7 +23,6 @@ c1, c2 = st.columns([1.2, 1], gap="large", vertical_alignment="center")
 with c1:
     html(
         f"""
-        <div class="eyebrow">● Diagnostik pertanian berbasis AI</div>
         <div class="d-hero">Deteksi Cepat Penyakit <span class="g">Daun Singkong</span> dari Foto</div>
         <p class="lead">Klasifikasi daun singkong dengan EfficientNetB0 dan visualisasi Grad-CAM,
         lengkap dengan cara penanganan awal untuk petani dan penyuluh.</p>
